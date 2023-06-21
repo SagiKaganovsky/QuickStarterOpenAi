@@ -79,7 +79,7 @@ const Chat = () => {
       }
 
       setAiMessages((prevMessages) => {
-        return [...prevMessages, data.result.m];
+        return [...prevMessages, data.result];
       });
 
       inputRef.current.value = "";

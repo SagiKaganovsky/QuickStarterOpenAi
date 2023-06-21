@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import Typewriter from "typewriter-effect";
 let socket;
 
 const Socket = () => {
@@ -14,10 +15,12 @@ const Socket = () => {
       console.log(socket.id);
       setConnected(socket.connected);
     });
+
     socket.on("disconnect", () => {
       console.log(socket.connected); // false
       setConnected(socket.connected);
     });
+
     socket.on("receive-message", (msg) => {
       console.log(msg);
       setInput(() => {
@@ -54,7 +57,18 @@ const Socket = () => {
       </div>
       <input placeholder="Type something" onChange={onChangeHandler} />
       <button onClick={sendHandler}>Send</button>
-      <p style={{ color: "white" }}>{input}</p>
+      <div style={{ color: "white" }}>
+        {input && (
+          <Typewriter
+            component={"p"}
+            options={{
+              strings: input,
+              autoStart: true,
+              pauseFor: 600
+            }}
+          />
+        )}
+      </div>
       {connected ? (
         <button onClick={disconnectHandler}>Disconnect</button>
       ) : (
