@@ -1,0 +1,128 @@
+/* =================
+    Setup 
+   ================= */
+
+.setup-inner {
+  display: flex;
+  justify-content: space-around;
+  padding: 1.5em .5em;
+  min-height: 234px;
+}
+
+.setup-inner>img {
+  width: 40%;
+  filter: drop-shadow(3px 2px 3px var(--medium-dark));
+  align-self: center;
+}
+
+.setup-input-container {
+  min-height: 74px;
+}
+
+.speech-bubble-ai {
+  max-width: 55%;
+  min-height: 124px;
+  border-radius: var(--border-rad-lg);
+  position: relative;
+  margin: 0;
+  border: 3px solid var(--medium-dark);
+  background-color: var(--white);
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+}
+
+.speech-bubble-ai:before {
+  content: "";
+  position: absolute;
+  border-left: 9px solid transparent;
+  border-right: 9px solid var(--medium-dark);
+  border-top: 9px solid var(--medium-dark);
+  border-bottom: 9px solid transparent;
+  left: -21px;
+  top: 64px;
+}
+
+.speech-bubble-ai:after {
+  content: "";
+  position: absolute;
+  border-left: 7px solid transparent;
+  border-right: 7px solid var(--white);
+  border-top: 7px solid var(--white);
+  border-bottom: 7px solid transparent;
+  left: -11px;
+  top: 68px;
+}
+
+.speech-bubble-ai>p {
+  padding: 0 1.3em;
+  color: var(--dark);
+  font-size: 85%;
+}
+/* larger mobiles+ */
+
+@media(min-width: 380px) {
+  .setup-input-container {
+      padding-top: 0;
+  }
+
+  .speech-bubble-ai:before {
+      top: 92px;
+  }
+
+  .speech-bubble-ai:after {
+      top: 96px;
+  }
+
+  .speech-bubble-ai>p {
+      font-size: 100%;
+  }
+
+  
+}
+
+
+.send-btn {
+  border-top-right-radius: var(--border-rad-lg);
+  border-bottom-right-radius: var(--border-rad-lg);
+  min-width: 50px;
+}
+
+.send-btn>img {
+  width: 1.6em;
+  vertical-align: middle;
+}
+
+.view-pitch-btn {
+  color: var(--light);
+  border-radius: var(--border-rad-lg);
+  padding: 1em;
+  margin: .4em auto;
+  display: block;
+  font-size: 1.2em;
+}
+
+.view-pitch-btn:hover {
+  box-shadow: 1px 1px 5px 1px var(--medium-dark);
+}
+
+
+
+/* =================
+    Output 
+   ================= */
+
+.output-container {
+  flex-direction: column;
+  margin: 1em auto;
+  color: var(--dark);
+  padding: 1em;
+  text-align: center;
+}
+
+.output-img-container>img {
+  max-width: 100%;
+  border-radius: var(--border-rad-lg);
+  box-shadow: 1px 1px 5px 1px var(--dark);
+}
+

@@ -1,0 +1,151 @@
+:root {
+    --white: #ffffff;
+    --light: whitesmoke;
+    --light-grey: #e8e8e8;
+    --pink: #ff176b;
+    --medium-dark: #777;
+    --dark: #242526;
+    --border-rad-lg: 15px;
+    --border-rad-lg: 15px;
+    --medium-light-text: #586e88;
+    --light-text: #fcfcfc;
+  }
+  *, *::before, *::after {
+    box-sizing: border-box;  
+}
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+  }
+  
+  body {
+    font-family: 'Poppins';
+    background-size: cover;
+    background-repeat: repeat-y;
+    background-image: url('../../public/images/moviepitchbg-dark.jpg');
+    position: relative;
+    min-height: 100vh;
+  }
+  
+  /* =================
+      Typography 
+     ================= */
+  
+  h1 {
+    font-family: 'Playfair Display SC', serif;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+  }
+  
+  p {
+    line-height: 1.35em;
+  }
+  
+  /* =================
+      Sections 
+     ================= */
+  
+  header {
+    background-color: var(--dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .3em;
+  }
+  
+  header>img {
+    height: 26px;
+  }
+  
+  header>a {
+    color: var(--light);
+    font-size: 1.5em;
+    text-decoration: none;
+    padding: 1em 0;
+  }
+  
+  header span {
+    font-weight: 700;
+  }
+  
+  main {
+    padding: 0 1em;
+  }
+  
+  section {
+    margin: 0 auto;
+    background-color: var(--light);
+    border-radius: var(--border-rad-lg);
+    padding: .25em 1em;
+    box-shadow: 0px 1px 18px 3px var(--dark);
+    max-width: 420px;
+  }
+
+
+  textarea {
+    background-color: var(--light-grey);
+    padding: .8em;
+    border: none;
+    border-top-right-radius: 0;
+    border-top-left-radius: var(--border-rad-lg);
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: var(--border-rad-lg);
+    width: 100%;
+    resize: none;
+    min-height: 40px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  textarea::placeholder {
+    color: var(--medium-dark);
+    font-size: 88%;
+    opacity: 0.8;
+  }
+  
+/* larger mobiles+ */
+
+@media(min-width: 380px) {
+    textarea::placeholder {
+        font-size: 100%;
+        opacity: 0.8;
+    }
+}
+/* =================
+    Buttons & SVG 
+   ================= */
+
+
+   button {
+    border: none;
+    background: var(--pink);
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: var(--dark);
+  }
+  img.loading {
+    max-width: 40px;
+    filter: none;
+  }
+
+  /* =================
+    Footer 
+   ================= */
+
+footer {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: .8em;
+    font-size: .7em;
+    text-align: center;
+    position: absolute;
+    /* bottom: 0; */
+    width: calc(100% - 17.9px);
+    /* height: 2.5rem; */
+  }
