@@ -16,8 +16,8 @@ export default async function (req, res) {
     return;
   }
 
-  const converrsation = req.body.chat;
-  if (converrsation.length === 0) {
+  const conversation = req.body.chat;
+  if (conversation.length === 0) {
     res.status(400).json({
       error: {
         message: "Please enter a converrsation",
@@ -27,13 +27,11 @@ export default async function (req, res) {
   }
 
   try {
-    console.log(converrsation);
+    console.log(conversation);
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: converrsation,
+      messages: conversation,
     });
-
-    console.log(completion.data.choices[0].message);
 
     res.status(200).json({
       result: {

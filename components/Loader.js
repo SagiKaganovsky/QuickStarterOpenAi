@@ -1,6 +1,11 @@
-
-const Loader = () => {
-  return <img src="images/loading.svg" className="loading" id="loading" />;
+const Loader = ({ className }) => {
+  return (
+    <img
+      src="images/loading.svg"
+      className={`loading ${className}`}
+      id="loading"
+    />
+  );
 };
 
 export default Loader;

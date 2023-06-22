@@ -1,28 +1,42 @@
 import { useState, useRef, useEffect } from "react";
+import Typewriter from "typewriter-effect";
 import styles from "../../assets/styles/chat.module.css";
 import Layout from "../../components/Layout";
+import Loader from "../../components/Loader";
+
 const Chat = () => {
   const [humanMessages, setHumanMessages] = useState([]);
-  const [aiMessages, setAiMessages] = useState([
+  const [aiMessages, setAiMessages] = useState([]);
+  const [conversation, setConversation] = useState([
     {
-      from: "ai",
-      message: "How can I help you?",
-      time: new Date().getTime(),
+      role: "assistant",
+      content: "Assistant that is always happy to help.",
     },
   ]);
-  const [converrsation, setConversation] = useState([
-    {
-      role: "system",
-      content:
-        "You are a highly knowladgable assistant that is always happy to help.",
-    },
-  ]);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [scrollHeight, setScollHeight] = useState();
   const inputRef = useRef();
-  const chatbotConversationRef = useRef();
+  const chatbotConversationRef = useRef(null);
+  const chatbotConversationContainerRef = useRef(null);
   const messages = [...aiMessages, ...humanMessages].sort((a, b) => {
     return a.time > b.time ? 1 : a.time < b.time ? -1 : 0;
   });
+
+  const handleFetch = async (userInput) => {
+    setIsLoading(true);
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat: userInput ? [...conversation, userInput] : conversation,
+      }),
+    });
+    setIsLoading(false);
+
+    return response;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,15 +45,6 @@ const Chat = () => {
       return;
     }
     try {
-      setConversation((prevConvarsation) => {
-        return [
-          prevConvarsation,
-          {
-            role: "user",
-            content: humanMessage,
-          },
-        ];
-      });
       setHumanMessages((prevMessages) => {
         return [
           ...prevMessages,
@@ -50,26 +55,11 @@ const Chat = () => {
           },
         ];
       });
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat: [
-            {
-              role: "system",
-              content:
-                "You are a highly knowladgable assistant that is always happy to help.",
-            },
-            {
-              role: "user",
-              content: humanMessage,
-            },
-          ],
-        }),
-      });
 
+      const response = await handleFetch({
+        role: "user",
+        content: humanMessage,
+      });
       const data = await response.json();
       if (response.status !== 200) {
         throw (
@@ -82,6 +72,19 @@ const Chat = () => {
         return [...prevMessages, data.result];
       });
 
+      setConversation((prevConvarsation) => {
+        return [
+          ...prevConvarsation,
+          {
+            role: "user",
+            content: humanMessage,
+          },
+          {
+            role: "assistant",
+            content: data.result.message,
+          },
+        ];
+      });
       inputRef.current.value = "";
     } catch (error) {
       // Consider implementing your own error handling logic here
@@ -90,12 +93,48 @@ const Chat = () => {
     }
   };
 
-  useEffect(() => {
-    if (chatbotConversationRef) {
-      chatbotConversationRef.current.scrollTop =
-        chatbotConversationRef.current.scrollHeight;
+  const handleInitAi = async () => {
+    try {
+      const response = await handleFetch(null);
+      const data = await response.json();
+      if (response.status !== 200) {
+        throw (
+          data.error ||
+          new Error(`Request failed with status ${response.status}`)
+        );
+      }
+
+      setAiMessages((prevMessages) => {
+        return [...prevMessages, data.result];
+      });
+
+      setConversation((prevConvarsation) => {
+        return [
+          ...prevConvarsation,
+          {
+            role: "assistant",
+            content: data.result.message,
+          },
+        ];
+      });
+    } catch (error) {
+      // Consider implementing your own error handling logic here
+      console.error(error);
+      alert(error.message);
     }
-  }, [messages]);
+  };
+
+  useEffect(() => {
+    handleInitAi();
+  }, []);
+
+  useEffect(() => {
+    console.log(scrollHeight, chatbotConversationRef.current?.scrollHeight);
+    if (chatbotConversationRef.current?.scrollHeight) {
+      chatbotConversationContainerRef.current.scrollTop =
+        chatbotConversationRef.current.scrollHeight + 20;
+    }
+  }, [scrollHeight]);
 
   return (
     <Layout title={"Chat Bot"}>
@@ -107,12 +146,50 @@ const Chat = () => {
             <h2>Ask me anything!</h2>
             <p className={styles["supportId"]}>User ID: 2344</p>
           </div>
-          <div
-            ref={chatbotConversationRef}
-            className={styles["chatbot-conversation-container"]}
-          >
+          <div  ref={chatbotConversationContainerRef}
+           className={styles["chatbot-conversation-container"]}>
             {messages.length > 0 &&
-              messages.map(({ from, message, time }) => {
+              messages.map(({ from, message, time }, i) => {
+                if (!isLoading && i === messages.length - 1) {
+                  return (
+                    <div
+                      ref={chatbotConversationRef}
+                      key={`Id${time}`}
+                      className={`${styles["speech"]} ${
+                        styles[from === "human" ? "speech-human" : "speech-ai"]
+                      }`}
+                    >
+                      <Typewriter
+                        onInit={(typewriter) => {
+                          message.split(/[\s,]+/).map((word) => {
+                            typewriter
+                              .typeString(word + " ")
+                              .callFunction(() => {
+                                if (
+                                  chatbotConversationRef &&
+                                  chatbotConversationRef.current &&
+                                  chatbotConversationRef.current.scrollHeight
+                                ) {
+                                  setScollHeight(
+                                    chatbotConversationRef.current.scrollHeight
+                                  );
+                                }
+                              })
+                              .start();
+                          });
+                        }}
+                      />
+                    </div>
+                  );
+                }
+                if (isLoading && i === messages.length - 1) {
+                  return (
+                    <Loader
+                      key={`${message}Id${time}`}
+                      className={styles["filter-green"]}
+                    />
+                  );
+                }
                 return (
                   <div
                     key={`${message}Id${time}`}
