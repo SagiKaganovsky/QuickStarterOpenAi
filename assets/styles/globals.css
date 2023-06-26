@@ -119,7 +119,7 @@
     Buttons & SVG 
    ================= */
 
-
+/* 
    button {
     border: none;
     background: var(--pink);
@@ -128,7 +128,7 @@
   
   button:hover {
     background-color: var(--dark);
-  }
+  } */
   img.loading {
     max-width: 40px;
     /* filter: none; */

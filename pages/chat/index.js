@@ -10,11 +10,12 @@ const Chat = () => {
   const [conversation, setConversation] = useState([
     {
       role: "assistant",
-      content: "Assistant that is always happy to help.",
+      // content: "Assistant that is always friendly, funny and professional to help.",
+      content: "You are assistant that gives very short answers",
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [scrollHeight, setScollHeight] = useState();
+  const [scrollHeight, setScollHeight] = useState(0);
   const inputRef = useRef();
   const chatbotConversationRef = useRef(null);
   const chatbotConversationContainerRef = useRef(null);
@@ -34,7 +35,6 @@ const Chat = () => {
       }),
     });
     setIsLoading(false);
-
     return response;
   };
 
@@ -126,13 +126,18 @@ const Chat = () => {
 
   useEffect(() => {
     handleInitAi();
+    chatbotConversationContainerRef.current.scrollTop =
+      chatbotConversationContainerRef.current.scrollTop + 50;
   }, []);
 
   useEffect(() => {
-    console.log(scrollHeight, chatbotConversationRef.current?.scrollHeight);
+    console.log(chatbotConversationRef.current?.scrollHeight);
+    console.log(chatbotConversationContainerRef.current?.scrollTop);
     if (chatbotConversationRef.current?.scrollHeight) {
       chatbotConversationContainerRef.current.scrollTop =
-        chatbotConversationRef.current.scrollHeight + 20;
+        chatbotConversationContainerRef.current.scrollTop +
+        chatbotConversationRef.current.scrollHeight +
+        10;
     }
   }, [scrollHeight]);
 
@@ -143,11 +148,14 @@ const Chat = () => {
           <div className={styles["chatbot-header"]}>
             <img src="images/owl-logo.png" className={styles["logo"]} />
             <h1>KnowItAll</h1>
-            <h2>Ask me anything!</h2>
+            <h2 className={styles["subtitle"]}>Ask me anything!</h2>
             <p className={styles["supportId"]}>User ID: 2344</p>
+            <button className={styles["clear-btn"]}>clear</button>
           </div>
-          <div  ref={chatbotConversationContainerRef}
-           className={styles["chatbot-conversation-container"]}>
+          <div
+            ref={chatbotConversationContainerRef}
+            className={styles["chatbot-conversation-container"]}
+          >
             {messages.length > 0 &&
               messages.map(({ from, message, time }, i) => {
                 if (!isLoading && i === messages.length - 1) {
@@ -160,10 +168,11 @@ const Chat = () => {
                       }`}
                     >
                       <Typewriter
+                        options={{ delay: 10 }}
                         onInit={(typewriter) => {
                           message.split(/[\s,]+/).map((word) => {
                             typewriter
-                              .typeString(word + " ")
+                              .typeString(`${word} `)
                               .callFunction(() => {
                                 if (
                                   chatbotConversationRef &&

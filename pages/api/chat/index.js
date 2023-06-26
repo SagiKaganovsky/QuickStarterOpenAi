@@ -1,3 +1,5 @@
+import conversationDb from "../../../firebase";
+import { push } from "firebase/database";
 import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
@@ -31,6 +33,16 @@ export default async function (req, res) {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: conversation,
+      presence_penalty: 0,
+      frequency_penalty: 0.3,
+    });
+
+    push(conversationDb, {
+      ...conversation[conversation.length - 1],
+    });
+    push(conversationDb, {
+      role: "assistant",
+      content: completion.data.choices[0].message.content,
     });
 
     res.status(200).json({
