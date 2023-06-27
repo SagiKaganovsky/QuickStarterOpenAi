@@ -1,14 +1,9 @@
 import conversationDb from "../../../firebase";
-import { get } from "firebase/database";
+import { remove } from "firebase/database";
 export default async function (req, res) {
   try {
-    const snapshot = await get(conversationDb);
-    if (snapshot.exists()) {
-      res.status(200).json({ result: snapshot });
-    } else {
-      res.status(200).json({ result: [] });
-      return;
-    }
+    await remove(conversationDb);
+    res.status(200).json({ result: [] });
   } catch (error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {

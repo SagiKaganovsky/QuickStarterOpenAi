@@ -58,7 +58,9 @@
   border: 1px solid var(--medium-light-text);
   border-radius: 15px;
 }
-
+.clear-btn:hover {
+  border: 1px solid var(--green);
+}
 .chatbot-conversation-container {
   max-height: 250px;
   min-height: 250px;

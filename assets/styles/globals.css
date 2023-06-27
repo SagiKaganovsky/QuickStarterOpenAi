@@ -9,6 +9,7 @@
     --border-rad-lg: 15px;
     --medium-light-text: #586e88;
     --light-text: #fcfcfc;
+    --green:#24976f;
   }
   *, *::before, *::after {
     box-sizing: border-box;  

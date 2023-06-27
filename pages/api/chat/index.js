@@ -29,27 +29,26 @@ export default async function (req, res) {
   }
 
   try {
-    console.log(conversation);
+    push(conversationDb, {
+      ...conversation[conversation.length - 1],
+    });
+
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: conversation,
+      messages: conversation.map(({ time, ...rest }) => rest),
       presence_penalty: 0,
       frequency_penalty: 0.3,
     });
 
     push(conversationDb, {
-      ...conversation[conversation.length - 1],
-    });
-    push(conversationDb, {
       role: "assistant",
       content: completion.data.choices[0].message.content,
+      time: new Date().getTime(),
     });
 
     res.status(200).json({
       result: {
-        from: "ai",
         message: completion.data.choices[0].message.content,
-        time: new Date().getTime(),
       },
     });
   } catch (error) {
